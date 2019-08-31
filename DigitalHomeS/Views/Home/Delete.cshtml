@@ -1,0 +1,39 @@
+﻿
+@{
+    Layout = null;
+}
+@model DigitalHomeS.Models.ContentPageModels
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete</title>
+</head>
+<body>
+    <div>
+        <h2>Удаление статьи</h2>
+        <dl>
+            <dt>Заголовок</dt>
+            <dd>
+                @Html.DisplayFor(model => model.content_article)
+            </dd>
+
+            <dt>Текст</dt>
+            <dd>
+                @Html.DisplayFor(model => model.content_text)
+            </dd>
+
+            <dt>Дата</dt>
+            <dd>
+                @Html.DisplayFor(model => model.date_article)
+            </dd>
+        </dl>
+
+        @using (Html.BeginForm())
+    {
+        <input type="submit" value="Удалить" />
+}
+    </div>
+</body>
+</html>

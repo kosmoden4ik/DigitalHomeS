@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using DigitalHomeS.Models;
+using System.Net.Mail;
 
 namespace DigitalHomeS
 {
@@ -19,7 +20,43 @@ namespace DigitalHomeS
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+
+
+            #region Email validation
+
+            string from;
+            string password;
+
+            #region Personal Data
+
+            from = "imessege@digitalhome.com.ua";
+            password = "24081991";
+
+            #endregion
+
+            // адрес и порт smtp-сервера, с которого мы и будем отправлять письмо
+            SmtpClient client = new SmtpClient("smtp-5.1gb.ua", 25);
+
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential(from, password);
+            client.EnableSsl = true;
+
+            // создаем письмо: message.Destination - адрес получателя
+            var mail = new MailMessage(from, message.Destination);
+            mail.Subject = message.Subject;
+            mail.Body = message.Body;
+            mail.IsBodyHtml = true;
+
+            return client.SendMailAsync(mail);
+
+            #endregion
+        
+
+
+
+
+          //  return Task.FromResult(0);
         }
     }
 

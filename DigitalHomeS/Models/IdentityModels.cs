@@ -24,6 +24,8 @@ namespace DigitalHomeS.Models
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
+        public DbSet<DeviceModels> Devices { get; set; }
+        public DbSet<ContentPageModels> ContentPage { get; set; }
 
         public static ApplicationDbContext Create()
         {

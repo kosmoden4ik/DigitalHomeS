@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Редактировать Статью";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model DigitalHomeS.Models.ContentPageModels
+<h2>Статья № @Model.id</h2>
+@using (Html.BeginForm("EditArtical", "Home", FormMethod.Post))
+{
+    <fieldset>
+        @Html.HiddenFor(m => m.id)
+        <p>
+            @Html.LabelFor(m => m.content_article, "Название Статьи")
+            <br />
+            @Html.EditorFor(m => m.content_article)
+        </p>
+        <p>
+            @Html.LabelFor(m => m.content_text, "Текст статьи")
+            <br />
+            @Html.TextAreaFor(m => m.content_text)
+            <br />
+            @Html.LabelFor(m=>m.date_article)
+            @Html.EditorFor(m=>m.date_article, DateTime.Now.Date)
+        </p>
+
+        <p><input type="submit" value="Отправить" /></p>
+    </fieldset>
+}
+
+

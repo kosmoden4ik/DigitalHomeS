@@ -68,27 +68,50 @@ namespace DigitalHomeS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            if (ModelState.IsValid)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                var user = await UserManager.FindAsync(model.Email, model.Password);
+                if (user != null)
+                {
+                    if (user.EmailConfirmed == true)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Email is not verified.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid login or password.");
+                }
             }
+            return View(model);
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);
+            //}
+
+            //// This doesn't count login failures towards account lockout
+            //// To enable password failures to trigger account lockout, change to shouldLockout: true
+            //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            //switch (result)
+            //{
+            //    case SignInStatus.Success:
+            //        return RedirectToLocal(returnUrl);
+            //    case SignInStatus.LockedOut:
+            //        return View("Lockout");
+            //    case SignInStatus.RequiresVerification:
+            //        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+            //    case SignInStatus.Failure:
+            //    default:
+            //        ModelState.AddModelError("", "Invalid login attempt.");
+            //        return View(model);
+            //}
         }
 
         //
@@ -142,8 +165,6 @@ namespace DigitalHomeS.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -153,17 +174,21 @@ namespace DigitalHomeS.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                var result_new = result;
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Email validation", "To finish registration follow <a href=\"" + callbackUrl + "\">this link</a>");
+                    return View("DisplayEmail");
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    
                 }
                 AddErrors(result);
             }
@@ -171,6 +196,35 @@ namespace DigitalHomeS.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        //
+        // POST: /Account/Register
+        //[httppost]
+        //[allowanonymous]
+        //[validateantiforgerytoken]
+        //public async task<actionresult> register(registerviewmodel model)
+        //{
+        //    if (modelstate.isvalid)
+        //    {
+        //        var user = new applicationuser { username = model.email, email = model.email };
+        //        var result = await usermanager.createasync(user, model.password);
+        //        if (result.succeeded)
+        //        {
+        //            await signinmanager.signinasync(user, ispersistent:false, rememberbrowser:false);
+
+        //            // for more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?linkid=320771
+        //            // send an email with this link
+        //            // string code = await usermanager.generateemailconfirmationtokenasync(user.id);
+        //            // var callbackurl = url.action("confirmemail", "account", new { userid = user.id, code = code }, protocol: request.url.scheme);
+        //            // await usermanager.sendemailasync(user.id, "confirm your account", "please confirm your account by clicking <a href=\"" + callbackurl + "\">here</a>");
+
+        //            return redirecttoaction("index", "home");
+        //        }
+        //        adderrors(result);
+        //    }
+
+        //    // if we got this far, something failed, redisplay form
+        //    return view(model);
+        //}
 
         //
         // GET: /Account/ConfirmEmail
@@ -211,10 +265,10 @@ namespace DigitalHomeS.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -227,6 +281,7 @@ namespace DigitalHomeS.Controllers
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
+
         }
 
         //
