@@ -8,7 +8,7 @@
     {
     <a href="Home/Create">Добавить статью</a>
     }
-    @foreach (DigitalHomeS.Models.ContentPageModels b in Model)
+    @foreach (DigitalHomeS.Models.ContentPageModels b in Model.Reverse())
     {
 
         <h1>@b.content_article</h1>

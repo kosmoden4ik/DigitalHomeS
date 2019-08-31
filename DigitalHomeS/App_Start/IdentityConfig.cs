@@ -29,13 +29,13 @@ namespace DigitalHomeS
 
             #region Personal Data
 
-            from = "imessege@digitalhome.com.ua";
+            from = "imessage@digitalhome.com.ua";
             password = "24081991";
 
             #endregion
 
             // адрес и порт smtp-сервера, с которого мы и будем отправлять письмо
-            SmtpClient client = new SmtpClient("smtp-5.1gb.ua", 25);
+            SmtpClient client = new SmtpClient("smtp-5.1gb.ua", 465);
 
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
