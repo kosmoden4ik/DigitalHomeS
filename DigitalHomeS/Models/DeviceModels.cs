@@ -12,6 +12,11 @@ namespace DigitalHomeS.Models
         public string type_device { get; set; }
         public string status { get; set; }//Comand
         public DateTime last_activ_time { set; get; }
-        
+        public virtual ICollection<ApplicationUser> Users { get; set; }
+
+        public DeviceModels()
+        {
+            Users = new List<ApplicationUser>();
+        }
     }
 }
