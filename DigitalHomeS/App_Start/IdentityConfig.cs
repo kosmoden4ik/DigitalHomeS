@@ -47,8 +47,8 @@ namespace DigitalHomeS
             mail.Subject = message.Subject;
             mail.Body = message.Body;
             mail.IsBodyHtml = true;
-
-            return client.SendMailAsync(mail);
+            var pochta = mail;
+            return client.SendMailAsync(pochta);
 
             #endregion
         

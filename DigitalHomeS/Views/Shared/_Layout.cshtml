@@ -10,6 +10,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
+
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link rel="stylesheet" href="content/css/bootstrap.min.css">
     <link rel="stylesheet" href="content/css/open-iconic-bootstrap.min.css">
@@ -31,8 +32,9 @@
                     <li class="nav-item"><a>@Html.ActionLink("Home ", "Index", "Home")</a> |</li>
                     <li class="nav-item"><a>@Html.ActionLink("About ", "About", "Home")</a> |</li>
 
-                    <li class="nav-item"><a>@Html.ActionLink("Contact ", "Contact", "Home")</a> |</li>
-
+                    @if (User.Identity.IsAuthenticated)
+                    {<li class="nav-item"><a>@Html.ActionLink("Device ", "Index", "UserDevice")</a> |</li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

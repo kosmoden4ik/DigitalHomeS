@@ -32,6 +32,7 @@ namespace DigitalHomeS.Models
         }
         public DbSet<DeviceModels> Devices { get; set; }
         public DbSet<ContentPageModels> ContentPage { get; set; }
+        
 
         public static ApplicationDbContext Create()
         {
