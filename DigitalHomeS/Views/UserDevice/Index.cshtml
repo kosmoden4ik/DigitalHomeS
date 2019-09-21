@@ -7,13 +7,13 @@
 <p>
     @Html.ActionLink("Добавить Девайс", "Create")
 </p>
-<table>
+<table >
     <tr>
-        <th>Mac-adress девайса</th>
-        <th>Тип</th>
-        <th>Статус</th>
-        <th>Время последней активности</th>
-        <th></th>
+        <th>Mac-adress девайса        |</th>     
+        <th>Тип                       |</th>
+        <th>Статус                    |</th>
+        <th>Время последней активности|</th>
+        <th>Name user                 |</th>
     </tr>
 
     @foreach (var item in Model)
@@ -25,22 +25,25 @@
        
     </p>
 
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.macadress)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.type_device)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.status)
-                </td>
-                <td> @c.UserName</td>
-                <td>
-                    @Html.ActionLink("Редактировать", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
-                </td>
-            </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.macadress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.type_device)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.last_activ_time)
+        </td>
+        <td> @c.UserName</td>
+        <td>
+            @Html.ActionLink("Редактировать", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+        </td>
+    </tr>
         }
     }
 

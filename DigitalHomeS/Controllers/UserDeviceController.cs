@@ -14,7 +14,7 @@ namespace DigitalHomeS.Controllers
         ApplicationDbContext db = new ApplicationDbContext();
         [Authorize]
         // GET: UserDevice
-        [RequireHttps]
+       
         public ActionResult Index()
         {
 

@@ -12,6 +12,7 @@ namespace DigitalHomeS.Controllers
     
     public class HomeController : Controller
     {
+        int apimvc = 1;
         ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
