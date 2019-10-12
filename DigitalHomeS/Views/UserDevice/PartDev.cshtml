@@ -1,0 +1,66 @@
+﻿@model IEnumerable<DigitalHomeS.Models.DeviceModels>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.macadress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.type_device)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.last_activ_time)
+        </th>
+        <th> On/Off</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        foreach (var c in item.Users)
+        {
+            string textButton;
+         
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.macadress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.type_device)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.last_activ_time)
+                </td>
+                <td>
+                    @if (item.type_device == "OnOff")
+    {
+
+        if (item.status == "1")
+        {
+            textButton = "Выкл";
+        }
+        else
+        {
+            textButton = "Вкл";
+        }
+                    <div class="btn btn-primary mr-2 mb-2">
+                        @Html.ActionLink(textButton, "ButtonChange", new { id = item.Id})
+                    </div>
+                   }
+                |
+
+                </td>
+                <td>
+                    @Html.ActionLink("Редактировать", "ButtonZ", new { id = item.Id }) |
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.Id })|
+                </td>
+            </tr>
+        }
+    }
+</table>
