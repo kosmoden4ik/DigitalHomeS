@@ -8,6 +8,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using DigitalHomeS.Services;
 using Microsoft.AspNet.Identity;
+using System.Threading.Tasks;
+
 namespace DigitalHomeS.Controllers
    
 {
@@ -18,34 +20,34 @@ namespace DigitalHomeS.Controllers
         
         // GET: UserDevice
        
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
 
 
            
-           var User = db.Users.Include(p => p.Devices);
-            var Devices = db.Devices.Include(p => p.Users);
+          // var User = db.Users.Include(p => p.Devices);
+            var Devices =db.Devices.Include(p => p.Users);
            
             ViewBag.dev = Devices.ToList();
-            return View(Devices.ToList());
+            return View(await Devices.ToListAsync());
         }
-        public ActionResult PartDev()
+        public async Task<ActionResult> PartDev()
         {
             
         
             
-            var Device = db.Devices.Include(p => p.Users);
+           // var Device = db.Devices.Include(p => p.Users);
             var DevicesUser = db.Users.Include(p => p.Devices);
-            return PartialView(DevicesUser.ToList());
+            return PartialView(await DevicesUser.ToListAsync());
         }
         [System.Web.Mvc.HttpGet]
-        public ActionResult ButtonZ(int? id)
+        public async Task<ActionResult> ButtonZ(int? id)
         {
             if (id == null)
             {
                 return HttpNotFound();
             }
-            DeviceModels device = db.Devices.Find(id);
+            DeviceModels device =await db.Devices.FindAsync(id);
             if (device != null)
             {
                 return View(device);
@@ -53,20 +55,20 @@ namespace DigitalHomeS.Controllers
             return HttpNotFound();
         }
         [System.Web.Mvc.HttpPost]
-        public ActionResult ButtonZ(DeviceModels device)
+        public async Task<ActionResult> ButtonZ(DeviceModels device)
         {
             db.Entry(device).State = EntityState.Modified;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         [System.Web.Mvc.HttpGet]
-        public ActionResult ButtonChange(int? id)
+        public async Task<ActionResult> ButtonChange(int? id)
         {
             if (id == null)
             {
                 return HttpNotFound();
             }
-            DeviceModels device = db.Devices.Find(id);
+            DeviceModels device =await db.Devices.FindAsync(id);
             if (device != null)
             {
                
@@ -81,7 +83,7 @@ namespace DigitalHomeS.Controllers
                 device.status ="1";
             }
             db.Entry(device).State = EntityState.Modified;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
               
             }
