@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DigitalHomeS.Controllers
@@ -25,12 +26,12 @@ namespace DigitalHomeS.Controllers
         }
 
         // POST api/<controller>
-        public int Post([FromBody]DeviceModels content)
+        public async Task<int> Post([FromBody]DeviceModels content)
         {
             int vkl=333;
             string mac = content.macadress;
 
-            List<DeviceModels> device = db.Devices.ToList();
+            List<DeviceModels> device =await db.Devices.ToListAsync();
             foreach (var x in device)
             {
                 if (x.macadress == mac)
@@ -44,7 +45,7 @@ namespace DigitalHomeS.Controllers
                 }
                 
             }
-           db.SaveChanges();
+           await db.SaveChangesAsync();
             return vkl;
         }
 
